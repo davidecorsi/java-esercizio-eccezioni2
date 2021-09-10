@@ -1,3 +1,4 @@
+import java.util.EmptyStackException;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -23,10 +24,11 @@ public class Main {
 		System.out.println("(un elemento per riga, = per terminare)");
 		Stack<Integer> stack = new Stack<Integer>();
 		String row = input.nextLine();
-		while(!row.equals("=")) {
-			Integer sx, dx, result;
-			char selector = row.charAt(0);
-			switch(selector) {
+		try {
+			while(!row.equals("=")) {
+				Integer sx, dx, result;
+				char selector = row.charAt(0);
+				switch(selector) {
 				case '+':
 				case '-':
 				case '*':
@@ -40,28 +42,39 @@ public class Main {
 					Integer n = Integer.parseInt(row);
 					stack.push(n);
 					break;
+				}
+				row = input.nextLine();
 			}
-			row = input.nextLine();
+			Integer result = stack.pop();
+			if(stack.empty())
+				System.out.println("Il risultato è " + result);
+			else {
+				System.out.println("L'espressione contiene troppi operandi");
+			}
+		} catch(ArithmeticException e) {
+			System.out.println("Errore: divisione per 0");
+		} catch(NumberFormatException e) {
+			System.out.println("Input scorretto: " + e);
+		} catch(EmptyStackException e) {
+			System.out.println("L'espressione contiene un numero insufficiente di operandi");
 		}
-		Integer result = stack.pop();
-		System.out.println("Il risultato è " + result);
 	}
 
 	private static int calculate(Integer sx, Integer dx, char selector) {
 		int result = 0;
 		switch(selector) {
-			case '+':
-				result = sx + dx;
-				break;
-			case '-':
-				result = sx - dx;
-				break;
-			case '*':
-				result = sx * dx;
-				break;
-			case '/':
-				result = sx / dx;
-				break;
+		case '+':
+			result = sx + dx;
+			break;
+		case '-':
+			result = sx - dx;
+			break;
+		case '*':
+			result = sx * dx;
+			break;
+		case '/':
+			result = sx / dx;
+			break;
 		}
 		return result;
 	}
